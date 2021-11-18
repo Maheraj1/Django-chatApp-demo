@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="post">{% csrf_token %}
+    <h1 class="h3 mb-3 fw-normal" style="color:blue;">Sign up</h1>
+    {{ registration_form.as_p }}
+    {% for filed in registration_form %}
+    <p>
+        {% for error in filed.error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endfor %}
+    </p>
+    {% endfor %}
+    {% if registration_form.non_filed_error %}
+    <div style="color:blue;">
+        <p>{{ registration_form.non_filed_error }}</p>
+    </div>
+    {% endif %}
+    <button class="btn btn-primary" type="submit">Sign in</button>
+</form>
+{% endblock %}

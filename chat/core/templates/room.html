@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<textarea name="messages" id="message_log" cols="30" rows="10" readonly></textarea><br>
+<input type="text" id="input" size="80" ><br>
+<input type="button" id="submit" value="Send">
+{{ room_name|json_script:"room-name" }}
+{{ user.username|json_script:"Username" }}
+<script>
+    var roomName = JSON.parse(document.querySelector('#room-name').textContent);
+    var Username = JSON.parse(document.querySelector('#Username').textContent);
+    console.log(roomName);
+    const chatSocket = new WebSocket(
+        'ws://' +
+        window.location.host +
+        '/ws/chat/' +
+        roomName +
+        '/'
+    );
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        console.log(data);
+        if (data.messages) {var log = document.querySelector('#message_log');log.value += data.messages;};
+        if (data.message) {document.querySelector('#message_log').value += (data.user + ': ' + data.message + '\n');};
+    };
+    document.querySelector('#submit').onclick = function(e) {
+        var messageInputDown = document.querySelector('#input');
+        var message = messageInputDown.value;
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'user': Username
+        }));
+        messageInputDown.value = "";
+    };
+</script>
+{% endblock %}

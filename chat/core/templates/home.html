@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block content %}
+<form method="get" action="{% url 'get_room' %}">
+    <input type="text" placeholder="Room name" name="room_name">
+</form>
+{% endblock %}
